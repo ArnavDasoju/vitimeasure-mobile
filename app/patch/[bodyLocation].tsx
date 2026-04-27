@@ -10,7 +10,7 @@
  *   ├─ Hero stats card (affected %, clear %, VASI score, trend badge)
  *   ├─ "PROGRESSION" section + LineChart (affected % + VASI lines + treatment marks)
  *   ├─ "SCAN HISTORY" section + swipeable scan rows
- *   ├─ "AI INSIGHTS" card (only when scans >= 3)
+ *   ├─ "INSIGHTS" card (only when scans >= 3)
  *   ├─ "TREATMENTS" section + swipeable treatment rows + Add button
  *   └─ Sticky bottom bar with "Scan Now" CTA
  */
@@ -919,9 +919,9 @@ export default function PatchDetailScreen() {
               </Card>
             </Animated.View>
 
-            {/* ── AI Chat ─────────────────────────────────────────── */}
+            {/* ── Chat ──────────────────────────────────────────── */}
             <Animated.View entering={FadeInDown.delay(120).duration(350).springify()}>
-              <SectionLabel label="Ask AI" style={styles.sectionLabel} />
+              <SectionLabel label="Ask a Question" style={styles.sectionLabel} />
               <AIChatCard
                 bodyLocation={bodyLocation}
                 scans={sorted}
@@ -969,10 +969,10 @@ export default function PatchDetailScreen() {
               </Card>
             </Animated.View>
 
-            {/* ── AI Insights ─────────────────────────────────────── */}
+            {/* ── Insights ──────────────────────────────────────── */}
             {sorted.length >= 3 && patch && (
               <Animated.View entering={FadeInDown.delay(240).duration(350).springify()}>
-                <SectionLabel label="AI Insights" style={styles.sectionLabel} />
+                <SectionLabel label="Insights" style={styles.sectionLabel} />
                 <InsightCard
                   patchId={patch.id}
                   bodyLocation={bodyLocation}

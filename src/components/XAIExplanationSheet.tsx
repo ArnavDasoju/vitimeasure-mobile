@@ -2,7 +2,7 @@
  * XAIExplanationSheet
  *
  * A bottom sheet opened by the "i" button on the results screen.
- * Contains all AI explanations in one scrollable unified view.
+ * Contains all explanations in one scrollable unified view.
  * Nothing here is visible by default — it requires deliberate user action.
  *
  * Sections rendered conditionally:

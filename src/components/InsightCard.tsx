@@ -1,5 +1,5 @@
 /**
- * InsightCard — AI-generated weekly insight for a tracked patch.
+ * InsightCard — weekly insight for a tracked patch.
  *
  * States:
  *   gated   — fewer than 3 scans; API is never called
@@ -151,10 +151,10 @@ export function InsightCard({ patchId, bodyLocation, scanHistory }: Props) {
     return (
       <Card style={styles.card}>
         <View style={styles.header}>
-          <Text style={styles.aiLabel}>AI INSIGHTS</Text>
+          <Text style={styles.aiLabel}>INSIGHTS</Text>
         </View>
         <Text style={styles.gatedText}>
-          Scan this patch at least 3 times to unlock AI insights.
+          Scan this patch at least 3 times to unlock insights.
         </Text>
       </Card>
     )
@@ -166,7 +166,7 @@ export function InsightCard({ patchId, bodyLocation, scanHistory }: Props) {
     return (
       <Card style={styles.card}>
         <View style={styles.header}>
-          <Text style={styles.aiLabel}>AI INSIGHTS</Text>
+          <Text style={styles.aiLabel}>INSIGHTS</Text>
         </View>
         <View style={styles.skeletonWrap}>
           <SkeletonLine width="95%" />
@@ -184,7 +184,7 @@ export function InsightCard({ patchId, bodyLocation, scanHistory }: Props) {
       <TouchableOpacity onPress={() => fetchInsight(true)} activeOpacity={0.75}>
         <Card style={styles.card}>
           <View style={styles.header}>
-            <Text style={styles.aiLabel}>AI INSIGHTS</Text>
+            <Text style={styles.aiLabel}>INSIGHTS</Text>
           </View>
           <Text style={styles.errorText}>
             Could not generate insight. Tap to retry.
@@ -199,7 +199,7 @@ export function InsightCard({ patchId, bodyLocation, scanHistory }: Props) {
   return (
     <Card style={styles.card}>
       <View style={styles.header}>
-        <Text style={styles.aiLabel}>AI INSIGHTS</Text>
+        <Text style={styles.aiLabel}>INSIGHTS</Text>
         <TouchableOpacity
           onPress={() => fetchInsight(true)}
           hitSlop={10}

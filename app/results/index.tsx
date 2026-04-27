@@ -283,7 +283,7 @@ export default function ResultsScreen() {
         contentContainerStyle={[styles.content, { paddingBottom: insets.bottom + 40 }]}
         showsVerticalScrollIndicator={false}
       >
-        {/* ── AI Results (Python analyzer) ────────────────────── */}
+        {/* ── Analysis Results ──────────────────────────────────── */}
         {result.annotatedImage ? (
           <Animated.View entering={FadeIn.duration(350)}>
             <SectionLabel label={result.bodyLocation} style={styles.sectionLabel} />

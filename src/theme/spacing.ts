@@ -30,6 +30,6 @@ export const layout = {
   cardPadding:       spacing.xl,   // 20px — internal card padding
   cardGap:           spacing.md,   // 12px — gap between cards
   sectionGap:        spacing['2xl'], // 24px — gap between major sections
-  bottomTabOffset:   24,           // breathing room below last card (tab bar is outside scroll area)
+  bottomTabOffset:   100,          // breathing room below last card (tab bar is absolute-positioned)
   headerHeight:      56,           // nav header height (excl. status bar)
 } as const

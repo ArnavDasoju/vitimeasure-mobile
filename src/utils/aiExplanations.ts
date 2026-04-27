@@ -1,5 +1,5 @@
 /**
- * AI Explanation Utilities
+ * Explanation Utilities
  *
  * Pure data functions called exclusively from XAIExplanationSheet.
  * Every function returns computed data only — no JSX.
@@ -35,7 +35,7 @@ export function getConfidenceBar(confidence: number): {
   } else {
     fillColor = '#ef4444'
     oneLiner =
-      'The AI struggled to find the patch boundary clearly. Try retaking in brighter, even lighting with the patch centered in frame.'
+      'The patch boundary was difficult to detect clearly. Try retaking in brighter, even lighting with the patch centered in frame.'
   }
 
   return {
@@ -170,7 +170,7 @@ export function getTrendOneLiner(
               ? { pct: 50, days: velocityResult.daysTo50Percent }
               : null
       if (milestone) {
-        text += ` At your current rate, the AI projects this patch will reach ${milestone.pct}% affected in approximately ${milestone.days} days.`
+        text += ` At your current rate, this patch is projected to reach ${milestone.pct}% affected in approximately ${milestone.days} days.`
       }
     } else if (velocityResult.isWorsening) {
       text += ` The current trend is worsening at ${velocityResult.velocityPerWeek.toFixed(1)}% per week.`

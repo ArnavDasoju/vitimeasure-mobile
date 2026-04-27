@@ -32,7 +32,7 @@ interface PdfExportParams {
   velocityResult: RepigmentationVelocityResult | null
   dateRange: { start: string; end: string }
   userName: string
-  /** Optional: pass the most recent scan to include the AI summary table */
+  /** Optional: pass the most recent scan to include the analysis summary table */
   latestAnalysis?: {
     percentage: number
     healthyPct: number
@@ -505,7 +505,7 @@ export async function generatePatchReport(params: PdfExportParams): Promise<stri
     `
   }
 
-  // ── SECTION: AI Analysis ──────────────────────────────────────────────
+  // ── SECTION: Skin Analysis ────────────────────────────────────────────
   let aiSummaryHtml = ''
   if (latestAnalysis) {
     const annotatedImgTag = latestAnalysis.annotatedImage
@@ -794,7 +794,7 @@ export async function generatePatchReport(params: PdfExportParams): Promise<stri
             <div style="font-size:11px;color:var(--text-muted);margin-top:2px;">
               ${s.affectedPercent.toFixed(1)}% affected &middot; VASI ${vasi.toFixed(2)} &middot;
               <span style="color:${sev.color};">${sev.label}</span>
-              ${s.detectionConfidence !== undefined ? ` &middot; AI confidence ${(s.detectionConfidence * 100).toFixed(0)}%` : ''}
+              ${s.detectionConfidence !== undefined ? ` &middot; Confidence ${(s.detectionConfidence * 100).toFixed(0)}%` : ''}
             </div>
           </div>
         </div>

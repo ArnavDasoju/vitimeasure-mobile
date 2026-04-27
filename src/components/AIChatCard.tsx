@@ -1,12 +1,12 @@
 /**
- * AIChatCard — conversational AI assistant embedded in the Patch Detail screen.
+ * AIChatCard — conversational assistant embedded in the Patch Detail screen.
  *
  * Lets the user ask free-form questions about their scan data, graph, VASI score,
  * and anything else they want to understand. Context (scan history, body location,
- * VASI, trend) is sent with every request so the AI always has full picture.
+ * VASI, trend) is sent with every request for full picture.
  *
- * Design mirrors InsightCard: indigo "ASK AI" label, same Card shell, same font
- * scale — it looks like a natural continuation of the existing AI section.
+ * Design mirrors InsightCard: indigo "ASK" label, same Card shell, same font
+ * scale — it looks like a natural continuation of the insights section.
  *
  * Messages are rendered in a ScrollView capped at 260 pt so the card stays
  * compact; the outer patch-detail ScrollView handles page-level scrolling.
@@ -123,7 +123,7 @@ export function AIChatCard({ bodyLocation, scans, vasiScore, changeFromLast }: P
     <Card style={styles.card}>
       {/* ── Header ────────────────────────────────────────────────── */}
       <View style={styles.header}>
-        <Text style={styles.aiLabel}>ASK AI</Text>
+        <Text style={styles.aiLabel}>ASK</Text>
         {hasHistory && (
           <TouchableOpacity onPress={handleClear} hitSlop={10} style={styles.clearBtn}>
             <Text style={styles.clearText}>Clear</Text>
