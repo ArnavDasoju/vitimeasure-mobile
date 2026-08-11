@@ -12,16 +12,14 @@ VITImeasure lets users scan affected body areas with their phone camera, get aut
 - **Expo CLI** (`npx expo` — bundled with the `expo` package)
 - **iOS**: Xcode 15+ and CocoaPods (iOS 16.0+ deployment target)
 - **Android**: Android Studio with SDK installed
-- A running instance of the [VITImeasure backend API](https://github.com/your-org/vitimeasure-api) (or use the default production URL)
+- The [VITImeasure backend API](https://github.com/ArnavDasoju/vitimeasure-api) (deployed at `https://vitimeasure-api-1.onrender.com`)
 
 ## Installation
 
 ```bash
-# Clone the repo
-git clone https://github.com/your-org/vitimeasure-mobile.git
+git clone https://github.com/ArnavDasoju/vitimeasure-mobile.git
 cd vitimeasure-mobile
 
-# Install JS dependencies
 npm install
 
 # (iOS only) Install native pods
@@ -60,6 +58,7 @@ app/
   report/          PDF report viewer
   patch/           Patch detail view
 src/
+  config.ts        API base URL, EAS project ID, SecureStore keys
   components/      Reusable UI components
   lib/             Auth, API client, local storage, formatting
   services/        Cloud sync, notifications, PDF export
@@ -73,9 +72,7 @@ src/
 
 | Variable | Description | Default |
 |---|---|---|
-| `EXPO_PUBLIC_API_BASE_URL` | Backend API base URL | Production Azure URL |
-
-All other env vars in `.env.example` are for the **backend**, not the mobile app.
+| `EXPO_PUBLIC_API_BASE_URL` | Backend API base URL | `https://vitimeasure-api-1.onrender.com` |
 
 ## Development
 
@@ -83,8 +80,6 @@ All other env vars in `.env.example` are for the **backend**, not the mobile app
 # Type-check without emitting
 npm run typecheck
 ```
-
-There is no test suite configured in the mobile app at this time.
 
 ## Tech Stack
 
@@ -98,8 +93,3 @@ There is no test suite configured in the mobile app at this time.
 ## License
 
 No LICENSE file is included in this repository. Contact the maintainers for licensing terms.
-
-## Notes
-
-- The backend repository and its `.env.example` are separate from this mobile codebase.
-- The repository URLs in this README are placeholders — replace them with the actual org/repo paths.

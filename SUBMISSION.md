@@ -7,7 +7,7 @@ Use the following credentials to review the app without completing the registrat
 | Field    | Value                        |
 |----------|------------------------------|
 | Email    | demo@vitimeasure.com         |
-| Password | VITIdemo2024!                |
+| Password | VITIdemo2024                 |
 
 > The demo account contains pre-populated scan history, stress log entries, and a completed onboarding flow so all features are immediately accessible.
 
@@ -34,3 +34,4 @@ Notification permissions are **not** requested automatically on launch. The user
 - The app requires an internet connection to sync scans. Offline data is preserved locally on-device via the file system.
 - The Delete Account feature calls `DELETE /api/auth/account` and erases all server-side data immediately.
 - All AI measurements are estimates and the app displays a Medical Disclaimer on the Settings screen.
+- The backend is hosted on Render's free tier — the first request after inactivity may take ~50 seconds to cold-start.
