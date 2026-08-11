@@ -26,7 +26,11 @@ import Animated, { FadeIn, FadeInDown } from 'react-native-reanimated'
 import * as SecureStore from 'expo-secure-store'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useAppStore } from '../../src/store/appStore'
-import { signOut, deleteAccount } from '../../src/lib/auth'
+import {
+  signOut,
+  deleteAccount,
+  setOnboardingDone as persistOnboardingDone,
+} from '../../src/lib/auth'
 import {
   requestNotificationPermissions,
   scheduleWeeklyScanReminder,
@@ -39,15 +43,16 @@ import {
 import { Card } from '../../src/components/ui/Card'
 import { SectionLabel } from '../../src/components/ui/SectionLabel'
 import { colors, layout, radii, spacing, typography } from '../../src/theme'
+import { storageKeys } from '../../src/config'
 
 const PRIVACY_POLICY_URL = 'https://vitimeasure.com/privacy'
 
 // ─── SecureStore keys for notification preferences ────────────────────────────
 
-const PREF_ENABLED = 'scan_reminder_enabled'
-const PREF_DAY    = 'scan_reminder_day'
-const PREF_HOUR   = 'scan_reminder_hour'
-const PREF_MINUTE = 'scan_reminder_minute'
+const PREF_ENABLED = storageKeys.scanReminderEnabled
+const PREF_DAY    = storageKeys.scanReminderDay
+const PREF_HOUR   = storageKeys.scanReminderHour
+const PREF_MINUTE = storageKeys.scanReminderMinute
 
 // ─── Settings Row ─────────────────────────────────────────────────────────────
 
@@ -246,9 +251,9 @@ function ScanRemindersSection() {
 
 // ─── Stress Check-In Section ──────────────────────────────────────────────────
 
-const STRESS_PREF_ENABLED = 'stress_checkin_enabled'
-const STRESS_PREF_HOUR    = 'stress_checkin_hour'
-const STRESS_PREF_MINUTE  = 'stress_checkin_minute'
+const STRESS_PREF_ENABLED = storageKeys.stressCheckInEnabled
+const STRESS_PREF_HOUR    = storageKeys.stressCheckInHour
+const STRESS_PREF_MINUTE  = storageKeys.stressCheckInMinute
 
 function StressCheckInSection() {
   const [enabled, setEnabled]           = useState(false)
@@ -420,7 +425,7 @@ export default function SettingsScreen() {
   }
 
   const handleReplayOnboarding = async () => {
-    await SecureStore.setItemAsync('onboardingDone', 'false')
+    await persistOnboardingDone(false)
     setOnboardingDone(false)
   }
 

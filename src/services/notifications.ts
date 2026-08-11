@@ -11,11 +11,11 @@ import { NativeModules, Platform } from 'react-native'
 import { router } from 'expo-router'
 import { saveDailyStress } from '../lib/storage'
 import { useAppStore } from '../store/appStore'
+import { EAS_PROJECT_ID, storageKeys } from '../config'
 
-const PUSH_TOKEN_KEY = 'expo_push_token'
-const REMINDER_ID_KEY = 'scan_reminder_id'
-const STRESS_REMINDER_ID_KEY = 'stress_reminder_id'
-const EAS_PROJECT_ID = 'f0640210-dd8b-4561-8476-6e0b68177d9e'
+const PUSH_TOKEN_KEY = storageKeys.pushToken
+const REMINDER_ID_KEY = storageKeys.scanReminderId
+const STRESS_REMINDER_ID_KEY = storageKeys.stressReminderId
 
 // Check if the native module exists before importing anything from expo-notifications.
 // NativeModules check is synchronous and safe in Hermes — no try-catch needed.

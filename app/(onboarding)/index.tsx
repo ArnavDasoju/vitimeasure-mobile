@@ -17,10 +17,10 @@ import {
 import { LinearGradient } from 'expo-linear-gradient'
 import Animated, { FadeIn } from 'react-native-reanimated'
 import { Path, Svg, Circle, Rect, Line } from 'react-native-svg'
-import * as SecureStore from 'expo-secure-store'
 import * as Haptics from 'expo-haptics'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useAppStore } from '../../src/store/appStore'
+import { setOnboardingDone as persistOnboardingDone } from '../../src/lib/auth'
 import { Button } from '../../src/components/ui/Button'
 import { colors, gradients, layout, radii, spacing, typography } from '../../src/theme'
 
@@ -100,7 +100,7 @@ export default function OnboardingScreen() {
 
   const finish = async () => {
     Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success).catch(() => {})
-    await SecureStore.setItemAsync('onboardingDone', 'true')
+    await persistOnboardingDone(true)
     setOnboardingDone(true)
   }
 

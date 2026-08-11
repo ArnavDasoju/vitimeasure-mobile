@@ -10,17 +10,15 @@
  *     fire performInitialSync in background, → tabs
  */
 
-import 'react-native-get-random-values'
 import { useEffect, useRef, useState } from 'react'
 import { Stack, useRouter, useSegments } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
-import * as SecureStore from 'expo-secure-store'
 import * as SplashScreen from 'expo-splash-screen'
 import { jwtDecode } from 'jwt-decode'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { useAppStore } from '../src/store/appStore'
-import { getSession, signOut } from '../src/lib/auth'
+import { getOnboardingDone, getSession, getToken, signOut } from '../src/lib/auth'
 import { setLogoutCallback } from '../src/services/apiClient'
 import { performInitialSync } from '../src/services/cloudSync'
 import {
@@ -31,8 +29,6 @@ import { ErrorBoundary } from '../src/components/ErrorBoundary'
 import { colors } from '../src/theme'
 
 SplashScreen.preventAutoHideAsync()
-
-const TOKEN_KEY = 'vitimeasure_token'
 
 type JwtPayload = {
   userId: string
@@ -65,18 +61,13 @@ function AuthGuard() {
           setSignedIn(false)
         })
 
-        let token: string | null = null
-        let onboarded: string | null = null
-        try {
-          ;[token, onboarded] = await Promise.all([
-            SecureStore.getItemAsync(TOKEN_KEY),
-            SecureStore.getItemAsync('onboardingDone'),
-          ])
-        } catch {
-          // SecureStore unavailable — treat as signed out
-        }
+        // Both helpers swallow SecureStore failures and report "signed out".
+        const [token, onboarded] = await Promise.all([
+          getToken(),
+          getOnboardingDone(),
+        ])
 
-        setOnboardingDone(onboarded === 'true')
+        setOnboardingDone(onboarded)
 
         if (!token) {
           setSignedIn(false)

@@ -46,6 +46,7 @@ import { SectionLabel } from '../../src/components/ui/SectionLabel'
 import { VitiligoResults } from '../../src/components/VitiligoResults'
 import { XAIExplanationSheet } from '../../src/components/XAIExplanationSheet'
 import { colors, layout, radii, spacing, typography } from '../../src/theme'
+import { storageKeys } from '../../src/config'
 import { formatDate } from '../../src/lib/format'
 import type { AnalyzeResult } from '../../src/types/app'
 import type { StoredScan } from '../../src/lib/storage'
@@ -56,7 +57,7 @@ const { width: SCREEN_W } = Dimensions.get('window')
 const IMG_W = SCREEN_W - layout.screenPadding * 2
 const IMG_H = IMG_W * 0.75
 
-const XAI_TOOLTIP_KEY = 'has_seen_xai_tooltip'
+const XAI_TOOLTIP_KEY = storageKeys.seenXaiTooltip
 
 // ─── Derive detection confidence from available scan signals ──────────────────
 // Used when the backend has not returned a detectionConfidence value.

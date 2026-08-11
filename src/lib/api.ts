@@ -1,12 +1,16 @@
+/**
+ * Backend endpoints for scanning, progress and AI features.
+ *
+ * Every call goes through `apiRequest`, which attaches the JWT and triggers a
+ * global logout on 401. Do not hand-roll fetch here — a second fetch stack is
+ * how these endpoints previously ended up silently ignoring expired sessions.
+ */
+
 import type { AnalyzeResult, ProgressEntry, ReportResult } from '../types/app'
-import { getToken } from './auth'
+import { apiRequest } from '../services/apiClient'
 
-const API_BASE = process.env.EXPO_PUBLIC_API_BASE_URL ?? 'https://vitimeasure-api-e2f2ewb6dbcjcrct.eastus2-01.azurewebsites.net'
-
-async function authHeader(): Promise<Record<string, string>> {
-  const token = await getToken()
-  return token ? { Authorization: `Bearer ${token}` } : {}
-}
+/** Image upload + inference is well over the default 30s budget. */
+const ANALYZE_TIMEOUT_MS = 60_000
 
 export async function analyzeScan(
   imageUri: string,
@@ -22,46 +26,24 @@ export async function analyzeScan(
   formData.append('userId', userId)
   formData.append('bodyLocation', bodyLocation)
 
-  const controller = new AbortController()
-  const timeout = setTimeout(() => controller.abort(), 60000)
-
-  const headers = await authHeader()
-
-  let res: Response
-  try {
-    res = await fetch(`${API_BASE}/api/analyzeScan`, {
-      method: 'POST',
-      headers,
-      body: formData,
-      signal: controller.signal,
-    })
-  } catch (err: any) {
-    if (err?.name === 'AbortError') {
-      throw new Error('Request timed out. The server took too long to respond.')
-    }
-    throw new Error('Could not reach the server. Check your internet connection.')
-  } finally {
-    clearTimeout(timeout)
-  }
-
-  if (!res.ok) {
-    const err = await res.json().catch(() => ({}))
-    throw new Error(err.error ?? `Server error (${res.status}). Please try again.`)
-  }
-  return res.json()
+  return apiRequest<AnalyzeResult>('/analyzeScan', {
+    method: 'POST',
+    body: formData,
+    timeoutMs: ANALYZE_TIMEOUT_MS,
+  })
 }
 
 export async function getProgress(
   userId: string,
   bodyLocation: string,
 ): Promise<ProgressEntry[]> {
-  const headers = await authHeader()
-  const res = await fetch(
-    `${API_BASE}/api/getProgress?userId=${userId}&bodyLocation=${encodeURIComponent(bodyLocation)}`,
-    { headers },
-  )
-  if (!res.ok) return []
-  return res.json()
+  const query = `userId=${encodeURIComponent(userId)}&bodyLocation=${encodeURIComponent(bodyLocation)}`
+  try {
+    return await apiRequest<ProgressEntry[]>(`/getProgress?${query}`)
+  } catch {
+    // Progress is a read-only enrichment — fall back to local data on failure.
+    return []
+  }
 }
 
 export async function generateReport(
@@ -70,17 +52,10 @@ export async function generateReport(
   startDate: string,
   endDate: string,
 ): Promise<ReportResult> {
-  const headers = await authHeader()
-  const res = await fetch(`${API_BASE}/api/generateReport`, {
+  return apiRequest<ReportResult>('/generateReport', {
     method: 'POST',
-    headers: { ...headers, 'Content-Type': 'application/json' },
     body: JSON.stringify({ userId, bodyLocation, startDate, endDate }),
   })
-  if (!res.ok) {
-    const err = await res.json().catch(() => ({}))
-    throw new Error(err.error ?? 'Failed to generate report')
-  }
-  return res.json()
 }
 
 export async function askAI(payload: {
@@ -93,25 +68,17 @@ export async function askAI(payload: {
   }
   conversationHistory: { role: 'user' | 'ai'; content: string }[]
 }): Promise<{ answer: string }> {
-  const headers = await authHeader()
-  const res = await fetch(`${API_BASE}/api/askAI`, {
+  return apiRequest<{ answer: string }>('/askAI', {
     method: 'POST',
-    headers: { ...headers, 'Content-Type': 'application/json' },
     body: JSON.stringify(payload),
   })
-  if (!res.ok) return { answer: '' }
-  return res.json()
 }
 
 export async function generateInsights(
   scans: { scanDate: string; affectedPercent: number; bodyLocation: string }[],
 ): Promise<{ insight: string }> {
-  const headers = await authHeader()
-  const res = await fetch(`${API_BASE}/api/generateInsights`, {
+  return apiRequest<{ insight: string }>('/generateInsights', {
     method: 'POST',
-    headers: { ...headers, 'Content-Type': 'application/json' },
     body: JSON.stringify(scans),
   })
-  if (!res.ok) return { insight: '' }
-  return res.json()
 }

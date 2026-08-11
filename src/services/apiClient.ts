@@ -8,12 +8,9 @@
  */
 
 import * as SecureStore from 'expo-secure-store'
+import { API_BASE, storageKeys } from '../config'
 
-const TOKEN_KEY = 'vitimeasure_token'
-
-const API_BASE =
-  process.env.EXPO_PUBLIC_API_BASE_URL ??
-  'https://vitimeasure-api-e2f2ewb6dbcjcrct.eastus2-01.azurewebsites.net'
+const DEFAULT_TIMEOUT_MS = 30_000
 
 // Registered once during app initialisation by _layout.tsx so the API client
 // can trigger logout on 401 without a circular import.
@@ -23,27 +20,37 @@ export function setLogoutCallback(fn: () => void): void {
   logoutCallback = fn
 }
 
+export type ApiRequestOptions = RequestInit & {
+  /** Overrides the default 30s abort timeout. Uploads need longer. */
+  timeoutMs?: number
+}
+
 export async function apiRequest<T = unknown>(
   endpoint: string,
-  options: RequestInit = {},
+  options: ApiRequestOptions = {},
 ): Promise<T> {
-  const token = await SecureStore.getItemAsync(TOKEN_KEY)
+  const { timeoutMs = DEFAULT_TIMEOUT_MS, ...init } = options
+  const token = await SecureStore.getItemAsync(storageKeys.token)
+
+  // FormData bodies must set their own Content-Type so fetch can attach the
+  // multipart boundary — forcing application/json here corrupts the upload.
+  const isFormData = init.body instanceof FormData
 
   const headers: Record<string, string> = {
-    'Content-Type': 'application/json',
-    ...(options.headers as Record<string, string> ?? {}),
+    ...(isFormData ? {} : { 'Content-Type': 'application/json' }),
+    ...(init.headers as Record<string, string> ?? {}),
   }
   if (token) {
     headers['Authorization'] = `Bearer ${token}`
   }
 
   const controller = new AbortController()
-  const timeoutId = setTimeout(() => controller.abort(), 30000)
+  const timeoutId = setTimeout(() => controller.abort(), timeoutMs)
 
   let res: Response
   try {
     res = await fetch(`${API_BASE}/api${endpoint}`, {
-      ...options,
+      ...init,
       headers,
       signal: controller.signal,
     })

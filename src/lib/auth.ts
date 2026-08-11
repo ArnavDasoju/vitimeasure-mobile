@@ -6,11 +6,10 @@
  */
 
 import * as SecureStore from 'expo-secure-store'
+import { API_BASE, storageKeys } from '../config'
 
-const API_BASE = process.env.EXPO_PUBLIC_API_BASE_URL ?? 'https://vitimeasure-api-e2f2ewb6dbcjcrct.eastus2-01.azurewebsites.net'
-
-const SESSION_KEY = 'vitimeasure_session'
-const TOKEN_KEY   = 'vitimeasure_token'
+const SESSION_KEY = storageKeys.session
+const TOKEN_KEY   = storageKeys.token
 
 // ─── Types ─────────────────────────────────────────────────────────────────────
 
@@ -58,7 +57,6 @@ export async function signIn(email: string, password: string): Promise<Session> 
 
   await SecureStore.setItemAsync(SESSION_KEY, JSON.stringify(session))
   await SecureStore.setItemAsync(TOKEN_KEY, token)
-  await SecureStore.setItemAsync('signedIn', 'true')
   return session
 }
 
@@ -93,12 +91,10 @@ export async function createAccount(
 
   await SecureStore.setItemAsync(SESSION_KEY, JSON.stringify(session))
   await SecureStore.setItemAsync(TOKEN_KEY, token)
-  await SecureStore.setItemAsync('signedIn', 'true')
   return session
 }
 
 export async function signOut(): Promise<void> {
-  await SecureStore.setItemAsync('signedIn', 'false')
   try { await SecureStore.deleteItemAsync(SESSION_KEY) } catch {}
   try { await SecureStore.deleteItemAsync(TOKEN_KEY) } catch {}
 }
@@ -118,6 +114,25 @@ export async function getToken(): Promise<string | null> {
     return await SecureStore.getItemAsync(TOKEN_KEY)
   } catch {
     return null
+  }
+}
+
+// ─── Onboarding flag ───────────────────────────────────────────────────────────
+// Owned here rather than read inline by screens, so the key lives in one place.
+
+export async function getOnboardingDone(): Promise<boolean> {
+  try {
+    return (await SecureStore.getItemAsync(storageKeys.onboardingDone)) === 'true'
+  } catch {
+    return false
+  }
+}
+
+export async function setOnboardingDone(done: boolean): Promise<void> {
+  try {
+    await SecureStore.setItemAsync(storageKeys.onboardingDone, done ? 'true' : 'false')
+  } catch {
+    // SecureStore unavailable — the flag re-prompts onboarding next launch.
   }
 }
 
