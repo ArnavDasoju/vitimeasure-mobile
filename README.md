@@ -2,10 +2,11 @@
 
 A React Native app that helps people with vitiligo photograph skin patches, receive automated coverage measurements from a backend vision pipeline, and track changes over time.
 
-<!-- Replace with actual screenshots from your device -->
-| Dashboard | Scan | Results | Report |
-|:-:|:-:|:-:|:-:|
-| [SCREENSHOT] | [SCREENSHOT] | [SCREENSHOT] | [SCREENSHOT] |
+## Screenshots
+
+| Dashboard | Results | Report |
+|:-:|:-:|:-:|
+| <img src="dashboard.png" width="240" alt="Dashboard" /> | <img src="results.png" width="240" alt="Scan results" /> | <img src="report.png" width="240" alt="Report" /> |
 
 ## Why this exists
 
