@@ -11,6 +11,15 @@ import { API_BASE, storageKeys } from '../config'
 const SESSION_KEY = storageKeys.session
 const TOKEN_KEY   = storageKeys.token
 
+/** Auth requests need a long timeout — the backend cold-starts in ~60s on free tier. */
+const AUTH_TIMEOUT_MS = 90_000
+
+function authFetch(url: string, init: RequestInit): Promise<Response> {
+  const controller = new AbortController()
+  const timer = setTimeout(() => controller.abort(), AUTH_TIMEOUT_MS)
+  return fetch(url, { ...init, signal: controller.signal }).finally(() => clearTimeout(timer))
+}
+
 // ─── Types ─────────────────────────────────────────────────────────────────────
 
 export type Session = {
@@ -33,12 +42,15 @@ const authErr = (code: AuthErrorCode) => ({ code })
 export async function signIn(email: string, password: string): Promise<Session> {
   let res: Response
   try {
-    res = await fetch(`${API_BASE}/api/auth/login`, {
+    res = await authFetch(`${API_BASE}/api/auth/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email: email.trim().toLowerCase(), password }),
     })
-  } catch {
+  } catch (err: any) {
+    if (err?.name === 'AbortError') {
+      throw new Error('Server is waking up — please try again in a moment.')
+    }
     throw new Error('Could not reach the server. Check your internet connection.')
   }
 
@@ -67,12 +79,15 @@ export async function createAccount(
 ): Promise<Session> {
   let res: Response
   try {
-    res = await fetch(`${API_BASE}/api/auth/register`, {
+    res = await authFetch(`${API_BASE}/api/auth/register`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email: email.trim().toLowerCase(), password, name: name.trim() }),
     })
-  } catch {
+  } catch (err: any) {
+    if (err?.name === 'AbortError') {
+      throw new Error('Server is waking up — please try again in a moment.')
+    }
     throw new Error('Could not reach the server. Check your internet connection.')
   }
 
@@ -145,7 +160,7 @@ export async function deleteAccount(): Promise<void> {
   const token = await SecureStore.getItemAsync(TOKEN_KEY).catch(() => null)
   if (!token) throw new Error('Not authenticated')
 
-  const res = await fetch(`${API_BASE}/api/auth/account`, {
+  const res = await authFetch(`${API_BASE}/api/auth/account`, {
     method: 'DELETE',
     headers: {
       'Content-Type': 'application/json',

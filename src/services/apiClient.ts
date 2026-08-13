@@ -10,7 +10,7 @@
 import * as SecureStore from 'expo-secure-store'
 import { API_BASE, storageKeys } from '../config'
 
-const DEFAULT_TIMEOUT_MS = 30_000
+const DEFAULT_TIMEOUT_MS = 90_000
 
 // Registered once during app initialisation by _layout.tsx so the API client
 // can trigger logout on 401 without a circular import.
