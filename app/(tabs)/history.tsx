@@ -65,7 +65,7 @@ function HistoryCard({ patch, index }: { patch: TrackedPatch; index: number }) {
             {/* Bottom row: big % + sparkline */}
             <View style={styles.bottomRow}>
               <View>
-                <Text style={styles.metric}>{patch.latestAffectedPercent.toFixed(1)}%</Text>
+                <Text style={styles.metric}>{(patch.latestAffectedPercent ?? 0).toFixed(1)}%</Text>
                 <Text style={styles.metricLabel}>AFFECTED</Text>
               </View>
               {patch.sparklineData.length >= 2 && (

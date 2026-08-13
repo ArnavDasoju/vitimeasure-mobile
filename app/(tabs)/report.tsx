@@ -60,7 +60,7 @@ function ReportCard({ patch, index }: { patch: TrackedPatch; index: number }) {
           {hasScans ? (
             <>
               <View style={styles.metricWrap}>
-                <Text style={styles.metric}>{patch.latestAffectedPercent.toFixed(1)}%</Text>
+                <Text style={styles.metric}>{(patch.latestAffectedPercent ?? 0).toFixed(1)}%</Text>
                 <Text style={styles.metricLabel}>current</Text>
               </View>
 

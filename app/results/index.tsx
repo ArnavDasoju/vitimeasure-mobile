@@ -370,7 +370,7 @@ export default function ResultsScreen() {
                 </View>
 
                 <Text style={styles.vasiValue}>
-                  {isNaN(vasiScore) ? '0.00' : vasiScore.toFixed(2)}
+                  {(vasiScore == null || isNaN(vasiScore)) ? '0.00' : vasiScore.toFixed(2)}
                 </Text>
               </View>
               <View style={[styles.vasiBadge, { backgroundColor: vasiSeverity.color + '22' }]}>

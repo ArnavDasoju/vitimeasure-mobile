@@ -61,8 +61,8 @@ export function getVASIMathBreakdown(
 } {
   const weight = getVASIWeight(bodyArea)
   const weightPercent = `${(weight * 100).toFixed(0)}%`
-  const affectedStr = `${affectedPercent.toFixed(1)}%`
-  const vasiStr = isNaN(vasiScore) ? '0.00' : vasiScore.toFixed(2)
+  const affectedStr = `${(affectedPercent ?? 0).toFixed(1)}%`
+  const vasiStr = (vasiScore == null || isNaN(vasiScore)) ? '0.00' : vasiScore.toFixed(2)
 
   const { label: severityLabel } = getVASISeverity(vasiScore)
   let severityOneLiner: string

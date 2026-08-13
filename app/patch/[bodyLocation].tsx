@@ -174,9 +174,9 @@ function ScanHistoryRow({
       <View style={styles.historyInfo}>
         <Text style={styles.historyDate}>{formatDate(scan.scanDate)}</Text>
         <Text style={styles.historyMeta}>
-          {scan.affectedPercent.toFixed(1)}% affected
+          {(scan.affectedPercent ?? 0).toFixed(1)}% affected
           {'  ·  '}
-          {scan.unaffectedPercent.toFixed(1)}% clear
+          {(scan.unaffectedPercent ?? 100).toFixed(1)}% clear
         </Text>
       </View>
       <TrendBadge value={change} size="sm" />
@@ -620,13 +620,13 @@ export default function PatchDetailScreen() {
   // VASI for the hero stat — prefer stored value, fall back to on-the-fly
   const latestVASI = useMemo(() => {
     if (!latest) return 0
-    if (latest.vasiScore !== undefined && !isNaN(latest.vasiScore)) {
+    if (latest.vasiScore != null && !isNaN(latest.vasiScore)) {
       return latest.vasiScore
     }
-    return computeVASI(bodyLocation, latest.affectedPercent)
+    return computeVASI(bodyLocation, latest.affectedPercent) ?? 0
   }, [latest, bodyLocation])
 
-  const vasiSeverity = getVASISeverity(latestVASI)
+  const vasiSeverity = getVASISeverity(latestVASI ?? 0)
 
   // Treatment marks for chart
   const treatmentMarks = useMemo(
@@ -730,7 +730,7 @@ export default function PatchDetailScreen() {
                 <View style={styles.statsRow}>
                   <View style={styles.statMain}>
                     <Text style={styles.statMainValue}>
-                      {latest.affectedPercent.toFixed(1)}
+                      {(latest.affectedPercent ?? 0).toFixed(1)}
                       <Text style={styles.statMainUnit}>%</Text>
                     </Text>
                     <Text style={styles.statMainLabel}>AFFECTED</Text>
@@ -740,7 +740,7 @@ export default function PatchDetailScreen() {
 
                   <View style={styles.statSide}>
                     <Text style={styles.statSideValue}>
-                      {latest.unaffectedPercent.toFixed(1)}%
+                      {(latest.unaffectedPercent ?? 100).toFixed(1)}%
                     </Text>
                     <Text style={styles.statSideLabel}>CLEAR SKIN</Text>
                   </View>
@@ -749,7 +749,7 @@ export default function PatchDetailScreen() {
 
                   <View style={styles.statSide}>
                     <Text style={styles.statSideValue}>
-                      {isNaN(latestVASI) ? '0.00' : latestVASI.toFixed(2)}
+                      {(latestVASI == null || isNaN(latestVASI)) ? '0.00' : latestVASI.toFixed(2)}
                     </Text>
                     <Text style={styles.statSideLabel}>VASI</Text>
                     <Text style={[styles.vasiSeverityLabel, { color: vasiSeverity.color }]}>
