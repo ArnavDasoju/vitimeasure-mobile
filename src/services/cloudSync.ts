@@ -113,7 +113,7 @@ export async function syncToCloud(userEmail: string, userId: string): Promise<{
       })
       patchesSynced = patchRes.synced
     } catch (err) {
-      console.error('[cloudSync] syncToCloud patches failed:', err)
+      console.warn('[cloudSync] syncToCloud patches failed:', err)
       success = false
     }
 
@@ -124,7 +124,7 @@ export async function syncToCloud(userEmail: string, userId: string): Promise<{
       })
       scansSynced = scanRes.synced
     } catch (err) {
-      console.error('[cloudSync] syncToCloud scans failed:', err)
+      console.warn('[cloudSync] syncToCloud scans failed:', err)
       success = false
     }
 
@@ -138,7 +138,7 @@ export async function syncToCloud(userEmail: string, userId: string): Promise<{
         treatmentsSynced = treatRes.synced
       }
     } catch (err) {
-      console.error('[cloudSync] syncToCloud treatments failed:', err)
+      console.warn('[cloudSync] syncToCloud treatments failed:', err)
       success = false
     }
 
@@ -152,7 +152,7 @@ export async function syncToCloud(userEmail: string, userId: string): Promise<{
         checkInsSynced = checkInRes.synced
       }
     } catch (err) {
-      console.error('[cloudSync] syncToCloud checkins failed:', err)
+      console.warn('[cloudSync] syncToCloud checkins failed:', err)
       success = false
     }
 
@@ -167,13 +167,13 @@ export async function syncToCloud(userEmail: string, userId: string): Promise<{
         stressEntriesSynced = stressRes.synced
       }
     } catch (err) {
-      console.error('[cloudSync] syncToCloud daily-stress failed:', err)
+      console.warn('[cloudSync] syncToCloud daily-stress failed:', err)
       success = false
     }
 
     return { success, patchesSynced, scansSynced, treatmentsSynced, checkInsSynced, stressEntriesSynced }
   } catch (err) {
-    console.error('[cloudSync] syncToCloud failed:', err)
+    console.warn('[cloudSync] syncToCloud failed:', err)
     return { success: false, patchesSynced: 0, scansSynced: 0, treatmentsSynced: 0, checkInsSynced: 0, stressEntriesSynced: 0 }
   }
 }
@@ -216,7 +216,7 @@ export async function syncFromCloud(userEmail: string, userId: string): Promise<
         const scanRes = await apiRequest<{ scans: CloudScan[] }>(`/sync/scans/${cp.id}`)
         cloudScans = scanRes.scans ?? []
       } catch (err) {
-        console.error(`[cloudSync] Failed to fetch scans for patch ${cp.id}:`, err)
+        console.warn(`[cloudSync] Failed to fetch scans for patch ${cp.id}:`, err)
         continue
       }
 
@@ -256,7 +256,7 @@ export async function syncFromCloud(userEmail: string, userId: string): Promise<
           }
         }
       } catch (err) {
-        console.error(`[cloudSync] Failed to fetch treatments for patch ${cp.id}:`, err)
+        console.warn(`[cloudSync] Failed to fetch treatments for patch ${cp.id}:`, err)
       }
     }
 
@@ -277,7 +277,7 @@ export async function syncFromCloud(userEmail: string, userId: string): Promise<
         }
       }
     } catch (err) {
-      console.error('[cloudSync] Failed to restore checkins:', err)
+      console.warn('[cloudSync] Failed to restore checkins:', err)
     }
 
     // Restore daily stress entries — appended after existing restore logic
@@ -294,12 +294,12 @@ export async function syncFromCloud(userEmail: string, userId: string): Promise<
         }
       }
     } catch (e) {
-      console.error('[cloudSync] Stress sync failed:', e)
+      console.warn('[cloudSync] Stress sync failed:', e)
     }
 
     return { success: true, patchesRestored, scansRestored, treatmentsRestored, checkInsRestored, stressEntriesRestored }
   } catch (err) {
-    console.error('[cloudSync] syncFromCloud failed:', err)
+    console.warn('[cloudSync] syncFromCloud failed:', err)
     return { success: false, patchesRestored: 0, scansRestored: 0, treatmentsRestored: 0, checkInsRestored: 0, stressEntriesRestored: 0 }
   }
 }

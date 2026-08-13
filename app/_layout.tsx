@@ -11,8 +11,12 @@
  */
 
 import { useEffect, useRef, useState } from 'react'
+import { LogBox } from 'react-native'
 import { Stack, useRouter, useSegments } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
+
+// Suppress non-critical sync warnings in dev — backend cold-starts cause these
+LogBox.ignoreLogs(['[cloudSync]', 'Request timed out'])
 import * as SplashScreen from 'expo-splash-screen'
 import { jwtDecode } from 'jwt-decode'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
