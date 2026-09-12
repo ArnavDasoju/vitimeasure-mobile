@@ -34,7 +34,7 @@ Vitiligo patients and their dermatologists lack a simple way to objectively meas
 
 - **Camera scan flow** — oval guide overlay, auto-crop to skin region, resize to 1600px, compress to JPEG, upload to backend for analysis
 - **Results display** — annotated image with cyan contour overlays rendered via Skia canvas, affected/unaffected percentages, patch count, skin tone classification, detection confidence bar
-- **VASI scoring** — clinically validated Vitiligo Area Scoring Index computed from backend-provided coverage data using published body-region weights (`src/utils/vasiScore.ts`)
+- **VASI scoring** — Vitiligo Area Scoring Index computed from backend-provided coverage data using the published body-region weights (`src/utils/vasiScore.ts`). The index itself is a published clinical instrument, this implementation of it has not been clinically validated
 - **Explainability (XAI) sheet** — bottom sheet showing VASI math breakdown, confidence interpretation, trend explanation (3+ scans), stress correlation context, and scan quality tips
 - **Dashboard** — patch list with sparkline trends, summary strip (total patches, scans, VASI), swipe-to-delete, pull-to-refresh
 - **Patch detail + history** — per-patch scan timeline, repigmentation velocity chart with linear regression and projected milestones
